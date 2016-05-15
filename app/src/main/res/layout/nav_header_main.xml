@@ -11,24 +11,23 @@
               android:orientation="vertical"
               android:gravity="bottom">
 
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:src="@android:drawable/sym_def_app_icon"
-            android:id="@+id/imageView"/>
-
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Android Studio"
+            android:text="By Filip Veselý"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jestli něco nefunguje, můžete zkusit veselyf.98@spst.eu, třeba se k tomu dostanu."
+        android:id="@+id/textView2" />
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="android.studio@android.com"
+            android:text="Too lazy to remove this."
             android:id="@+id/textView"/>
 
 </LinearLayout>
