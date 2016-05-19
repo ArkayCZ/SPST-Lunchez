@@ -5,14 +5,7 @@ import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by vesel on 14.05.2016.
@@ -23,35 +16,42 @@ public class DataProvider {
 
     private Document mPage;
 
+    private boolean mDownloadFailed = false;
+
     public DataProvider() throws Exception {
-        mPage = Jsoup.connect(URL).get();
+        try {
+            mPage = Jsoup.connect(URL).get();
+            mDownloadFailed = false;
+        } catch (Exception e) {
+            mDownloadFailed = true;
+        }
     }
 
     public String[] getLatest() {
-        ItemHolder[] result = new ItemHolder[2];
+        if (mDownloadFailed)
+            return new String[]{"Data nedostupná", "Data nedostupná", "Data nedostupná"};
 
         Elements nextDayDivs = mPage.select("div.jidelnicekDen").select("div > div");
         String first = nextDayDivs.get(3).text();
         String second = nextDayDivs.get(4).text();
 
-        return new String[]{this.extractImportantInfo(first), this.extractImportantInfo(second), this.extractFirstPart(first), this.extractFirstPart(second)};
+        return new String[]{this.extractImportantInfo(first), this.extractImportantInfo(second), this.extractFirstPart(first)};
     }
 
     private String extractImportantInfo(String input) {
-        String[] splitInput = input.split(" \\-\\- ");
-        String[] nameParts = splitInput[2].split("\\(")[0].split("\\, ");
+        String namePart = input.split(" \\-\\- ")[2];
+        int lastBracketIndex = namePart.lastIndexOf("(");
+        namePart = namePart.substring(0, lastBracketIndex);
 
-        StringBuilder result = new StringBuilder();
-        for (int i = 1; i < (nameParts.length - 1); i++) {
-            result.append(nameParts[i] + ", ");
-        }
+        String[] excludedWords = {", nápoje", ", SALÁTY", ", OVOCE"};
+        for (String s : excludedWords)
+            namePart = namePart.replace(s, "");
 
-        return result.toString().substring(0, result.toString().length() - 2);
+        return namePart.substring(namePart.indexOf(",") + 2);
     }
 
     private String extractFirstPart(String input) {
-        String[] splitInput = input.split(" \\-\\- ");
-        String[] nameParts = splitInput[2].split("\\(")[0].split("\\, ");
-        return nameParts[0];
+        String namePart = input.split(" \\-\\- ")[2];
+        return namePart.substring(0, namePart.indexOf(","));
     }
 }

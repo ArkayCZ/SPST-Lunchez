@@ -35,4 +35,14 @@
         android:layout_below="@+id/lunch_1_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zkusit znovu a updatovat widget"
+        android:id="@+id/try_again_button"
+        android:layout_below="@+id/lunch_2_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="38dp" />
 </RelativeLayout>

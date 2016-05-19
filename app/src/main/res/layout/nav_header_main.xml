@@ -19,9 +19,9 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="310dp"
         android:layout_height="wrap_content"
-        android:text="Jestli něco nefunguje, můžete zkusit veselyf.98@spst.eu, třeba se k tomu dostanu."
+        android:text="Jestli něco nefunguje, dejte mi prosím vědět na veselyf.98@spst.eu."
         android:id="@+id/textView2" />
 
     <TextView

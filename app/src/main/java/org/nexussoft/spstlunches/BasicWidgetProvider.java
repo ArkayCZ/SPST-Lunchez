@@ -47,7 +47,7 @@ public class BasicWidgetProvider extends AppWidgetProvider {
             mViews.setTextViewText(R.id.lunch_2_title, data[1].substring(0, 1).toUpperCase() + data[1].substring(1));
 
             mViews.setTextViewText(R.id.lunch_1_description, data[2]);
-            mViews.setTextViewText(R.id.lunch_2_description, data[3]);
+            mViews.setTextViewText(R.id.lunch_2_description, data[2]);
 
             mManager.updateAppWidget(mWidgetIds, mViews);
         }

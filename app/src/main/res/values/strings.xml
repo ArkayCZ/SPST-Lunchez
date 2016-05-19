@@ -7,4 +7,6 @@
     <string name="action_settings">Settings</string>
     <string name="basic_widget_title">Obědy SPŠT</string>
     <string name="getting_data">Načítání nových dat...</string>
+    <string name="success_updating">Podařilo se stáhnou nová data a updatnout widget.</string>
+    <string name="failure_updating">Update selhal.</string>
 </resources>

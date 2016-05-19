@@ -1,7 +1,10 @@
 package org.nexussoft.spstlunches;
 
 import android.Manifest;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ComponentInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
@@ -30,6 +35,8 @@ public class MainActivity extends AppCompatActivity
 
     private TextView mLunch1View;
     private TextView mLunch2View;
+
+    private boolean mUpdateWidget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +53,15 @@ public class MainActivity extends AppCompatActivity
         } else {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.INTERNET}, INTERNET_PERMISSION_REQUEST_CODE);
         }
+
+        Button tryAgainButton = (Button)findViewById(R.id.try_again_button);
+        tryAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUpdateWidget = true;
+                new DownloadTask().execute();
+            }
+        });
 
         mLunch1View = (TextView) findViewById(R.id.lunch_1_title);
         mLunch2View = (TextView) findViewById(R.id.lunch_2_title);
@@ -111,6 +127,24 @@ public class MainActivity extends AppCompatActivity
 
             mLunch1View.setText(result[0]);
             mLunch2View.setText(result[1]);
+
+            if(!mUpdateWidget) return;
+            RemoteViews remoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.basic_widget);
+            ComponentName widget = new ComponentName(MainActivity.this, BasicWidgetProvider.class);
+
+            remoteViews.setTextViewText(R.id.lunch_1_title, result[0].substring(0, 1).toUpperCase() + result[0].substring(1));
+            remoteViews.setTextViewText(R.id.lunch_2_title, result[1].substring(0, 1).toUpperCase() + result[1].substring(1));
+
+            remoteViews.setTextViewText(R.id.lunch_1_description, result[2]);
+            remoteViews.setTextViewText(R.id.lunch_2_description, result[2]);
+
+            AppWidgetManager.getInstance(MainActivity.this).updateAppWidget(widget, remoteViews);
+            mUpdateWidget = false;
+
+            /* Fragile AF. Fix this, someday, somehow. Nah, who am I kidding? */
+            if(result[0].equals("Data nedostupná"))
+                Snackbar.make(findViewById(R.id.drawer_layout), R.string.failure_updating, Snackbar.LENGTH_SHORT).show();
+            else Snackbar.make(findViewById(R.id.drawer_layout), R.string.success_updating, Snackbar.LENGTH_SHORT).show();
         }
 
         @Override
