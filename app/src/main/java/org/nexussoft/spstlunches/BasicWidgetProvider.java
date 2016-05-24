@@ -29,25 +29,28 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-        Log.i("WIDGET", "Doing stuff with the widget!");
-
         mViews = new RemoteViews(context.getPackageName(), R.layout.basic_widget);
         mManager = appWidgetManager;
         mWidgetIds = appWidgetIds;
+        mContext = context;
 
-        mViews.setTextViewText(R.id.lunch_1_title, "TITLE!");
-        Intent updateIntent = new Intent(context, BasicWidgetProvider.class);
-        updateIntent.setAction(UPDATE_ACTION);
-        PendingIntent updatePendingIntent = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mViews.setOnClickPendingIntent(R.id.refresh_button, updatePendingIntent);
-
+        mViews.setOnClickPendingIntent(R.id.refresh_button, getPendingSelfIntent(context, UPDATE_ACTION));
         new DownloadTask().execute();
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
         mContext = context;
-        Log.i("TAG", "Received!");
+        mClickUpdate = true;
+
+        new DownloadTask().execute();
+    }
+
+    public PendingIntent getPendingSelfIntent(Context context, String action) {
+        Intent intent = new Intent(context, getClass()).setAction(action);
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private class DownloadTask extends AsyncTask<Void, Void, Void> {
@@ -56,7 +59,7 @@ public class BasicWidgetProvider extends AppWidgetProvider {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(!mClickUpdate) {
+            if (!mClickUpdate) {
                 mViews.setTextViewText(R.id.lunch_1_title, data[0].substring(0, 1).toUpperCase() + data[0].substring(1));
                 mViews.setTextViewText(R.id.lunch_2_title, data[1].substring(0, 1).toUpperCase() + data[1].substring(1));
 

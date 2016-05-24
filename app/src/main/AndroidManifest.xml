@@ -23,12 +23,10 @@
         <receiver android:name=".BasicWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="org.nexussoft.spstlunches.BasicWidgetProvider.UPDATE_ACTION" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/basic_appwidget_info" />
         </receiver>
-
-
     </application>
-
 </manifest>
