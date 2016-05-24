@@ -35,6 +35,9 @@ public class DataProvider {
         String first = nextDayDivs.get(3).text();
         String second = nextDayDivs.get(4).text();
 
+        first = first.replaceAll("[,.!?;:]", "$0 ").replaceAll("\\s+", " ");
+        second = second.replaceAll("[,.!?;:]", "$0 ").replaceAll("\\s+", " ");
+
         return new String[]{this.extractImportantInfo(first), this.extractImportantInfo(second), this.extractFirstPart(first)};
     }
 

@@ -1,8 +1,11 @@
 package org.nexussoft.spstlunches;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,11 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     private RemoteViews mViews;
     private AppWidgetManager mManager;
     private int[] mWidgetIds;
+    private Context mContext;
+
+    private boolean mClickUpdate = false;
+
+    public static String UPDATE_ACTION = "org.nexussoft.spstlunches.BasicWidgetProvider.UPDATE_ACTION";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -28,13 +36,18 @@ public class BasicWidgetProvider extends AppWidgetProvider {
         mWidgetIds = appWidgetIds;
 
         mViews.setTextViewText(R.id.lunch_1_title, "TITLE!");
+        Intent updateIntent = new Intent(context, BasicWidgetProvider.class);
+        updateIntent.setAction(UPDATE_ACTION);
+        PendingIntent updatePendingIntent = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mViews.setOnClickPendingIntent(R.id.refresh_button, updatePendingIntent);
 
         new DownloadTask().execute();
     }
 
     @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+    public void onReceive(Context context, Intent intent) {
+        mContext = context;
+        Log.i("TAG", "Received!");
     }
 
     private class DownloadTask extends AsyncTask<Void, Void, Void> {
@@ -43,13 +56,27 @@ public class BasicWidgetProvider extends AppWidgetProvider {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            mViews.setTextViewText(R.id.lunch_1_title, data[0].substring(0, 1).toUpperCase() + data[0].substring(1));
-            mViews.setTextViewText(R.id.lunch_2_title, data[1].substring(0, 1).toUpperCase() + data[1].substring(1));
+            if(!mClickUpdate) {
+                mViews.setTextViewText(R.id.lunch_1_title, data[0].substring(0, 1).toUpperCase() + data[0].substring(1));
+                mViews.setTextViewText(R.id.lunch_2_title, data[1].substring(0, 1).toUpperCase() + data[1].substring(1));
 
-            mViews.setTextViewText(R.id.lunch_1_description, data[2]);
-            mViews.setTextViewText(R.id.lunch_2_description, data[2]);
+                mViews.setTextViewText(R.id.lunch_1_description, data[2]);
+                mViews.setTextViewText(R.id.lunch_2_description, data[2]);
 
-            mManager.updateAppWidget(mWidgetIds, mViews);
+                mManager.updateAppWidget(mWidgetIds, mViews);
+            } else {
+                RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.basic_widget);
+                ComponentName widget = new ComponentName(mContext, BasicWidgetProvider.class);
+
+                remoteViews.setTextViewText(R.id.lunch_1_title, data[0].substring(0, 1).toUpperCase() + data[0].substring(1));
+                remoteViews.setTextViewText(R.id.lunch_2_title, data[1].substring(0, 1).toUpperCase() + data[1].substring(1));
+
+                remoteViews.setTextViewText(R.id.lunch_1_description, data[2]);
+                remoteViews.setTextViewText(R.id.lunch_2_description, data[2]);
+
+                AppWidgetManager.getInstance(mContext).updateAppWidget(widget, remoteViews);
+                mClickUpdate = false;
+            }
         }
 
         @Override
