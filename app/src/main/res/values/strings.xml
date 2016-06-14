@@ -11,4 +11,6 @@
     <string name="failure_updating">Update selhal.</string>
     <string name="updating">Probíhá aktualizace dat.</string>
     <string name="widget_update_successful">Widget byl úspěšně aktualizován</string>
+    <string name="widget_update_failed">Update selhal, zkontrolujte připojení k internetu.</string>
+    <string name="data_unavailable">Data nejsou dostupná.</string>
 </resources>

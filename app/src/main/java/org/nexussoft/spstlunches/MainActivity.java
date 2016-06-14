@@ -120,39 +120,45 @@ public class MainActivity extends AppCompatActivity
     private class DownloadTask extends AsyncTask<Void, Void, Void> {
 
         private String[] result;
+        private boolean mSuccess;
 
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            mLunch1View.setText(result[0]);
-            mLunch2View.setText(result[1]);
+            if(mSuccess) {
+                mLunch1View.setText(result[0]);
+                mLunch2View.setText(result[1]);
 
-            if(!mUpdateWidget) return;
-            RemoteViews remoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.basic_widget);
-            ComponentName widget = new ComponentName(MainActivity.this, BasicWidgetProvider.class);
+                if(!mUpdateWidget) return;
+                RemoteViews remoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.basic_widget);
+                ComponentName widget = new ComponentName(MainActivity.this, BasicWidgetProvider.class);
 
-            remoteViews.setTextViewText(R.id.lunch_1_title, result[0].substring(0, 1).toUpperCase() + result[0].substring(1));
-            remoteViews.setTextViewText(R.id.lunch_2_title, result[1].substring(0, 1).toUpperCase() + result[1].substring(1));
+                remoteViews.setTextViewText(R.id.lunch_1_title, result[0].substring(0, 1).toUpperCase() + result[0].substring(1));
+                remoteViews.setTextViewText(R.id.lunch_2_title, result[1].substring(0, 1).toUpperCase() + result[1].substring(1));
 
-            remoteViews.setTextViewText(R.id.lunch_1_description, result[2]);
-            remoteViews.setTextViewText(R.id.lunch_2_description, result[2]);
+                remoteViews.setTextViewText(R.id.lunch_1_description, result[2]);
+                remoteViews.setTextViewText(R.id.lunch_2_description, result[2]);
 
-            AppWidgetManager.getInstance(MainActivity.this).updateAppWidget(widget, remoteViews);
-            mUpdateWidget = false;
+                AppWidgetManager.getInstance(MainActivity.this).updateAppWidget(widget, remoteViews);
+                mUpdateWidget = false;
 
-            /* Fragile AF. Fix this, someday, somehow. Nah, who am I kidding? */
-            if(result[0].equals("Data nedostupná"))
+                Snackbar.make(findViewById(R.id.drawer_layout), R.string.success_updating, Snackbar.LENGTH_SHORT).show();
+            } else {
                 Snackbar.make(findViewById(R.id.drawer_layout), R.string.failure_updating, Snackbar.LENGTH_SHORT).show();
-            else Snackbar.make(findViewById(R.id.drawer_layout), R.string.success_updating, Snackbar.LENGTH_SHORT).show();
+            }
+
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
                 result = new DataProvider().getLatest();
+                mSuccess = true;
             } catch (Exception e) {
                 e.printStackTrace();
+                mSuccess = false;
             }
 
             return null;

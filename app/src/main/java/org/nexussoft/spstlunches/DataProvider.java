@@ -27,9 +27,9 @@ public class DataProvider {
         }
     }
 
-    public String[] getLatest() {
+    public String[] getLatest() throws Exception {
         if (mDownloadFailed)
-            return new String[]{"Data nedostupná", "Data nedostupná", "Data nedostupná"};
+            throw new Exception();
 
         Elements nextDayDivs = mPage.select("div.jidelnicekDen").select("div > div");
         String first = nextDayDivs.get(3).text();

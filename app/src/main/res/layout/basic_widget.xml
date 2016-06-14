@@ -48,19 +48,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:paddingTop="12dp"
-            android:text="@string/getting_data"
+            android:text="@string/data_unavailable"
             android:textColor="#000000"
-            android:textSize="11sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/lunch_1_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="12dp"
-            android:text="@string/getting_data"
+            android:paddingRight="12dp"
+            android:text="@string/data_unavailable"
             android:textColor="#535353"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -73,19 +75,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:paddingTop="12dp"
-            android:text="@string/getting_data"
+            android:text="@string/data_unavailable"
             android:textColor="#000000"
-            android:textSize="11sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/lunch_2_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="12dp"
-            android:text="@string/getting_data"
+            android:paddingRight="12dp"
+            android:text="@string/data_unavailable"
             android:textColor="#535353"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>
