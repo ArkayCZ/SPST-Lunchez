@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 /**
  * Created by vesel on 14.05.2016.
@@ -44,6 +45,8 @@ public class BasicWidgetProvider extends AppWidgetProvider {
 
         mContext = context;
         mClickUpdate = true;
+
+        Toast.makeText(mContext, R.string.updating, Toast.LENGTH_SHORT).show();
 
         new DownloadTask().execute();
     }
@@ -80,6 +83,8 @@ public class BasicWidgetProvider extends AppWidgetProvider {
                 AppWidgetManager.getInstance(mContext).updateAppWidget(widget, remoteViews);
                 mClickUpdate = false;
             }
+
+            Toast.makeText(mContext, R.string.widget_update_successful, Toast.LENGTH_SHORT).show();
         }
 
         @Override
