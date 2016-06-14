@@ -31,8 +31,6 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-        Log.i("BasicWidget", "Updating widget...");
-
         mViews = new RemoteViews(context.getPackageName(), R.layout.basic_widget);
         mManager = appWidgetManager;
         mWidgetIds = appWidgetIds;
@@ -42,10 +40,7 @@ public class BasicWidgetProvider extends AppWidgetProvider {
 
         if(mShouldUpdateData) {
             mShouldUpdateData = false;
-            Log.i("BasicWidget", "Starting data download task.");
             new DownloadTask().execute();
-        } else {
-            Log.i("BasicWidget", "Data update skipped.");
         }
     }
 
@@ -53,7 +48,6 @@ public class BasicWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        Log.i("BasicWidget", "Intent action: " + intent.getAction());
         mContext = context;
         if(intent.getAction().equals(UPDATE_ACTION)) {
             mClickUpdate = true;
@@ -95,7 +89,6 @@ public class BasicWidgetProvider extends AppWidgetProvider {
                         mManager.updateAppWidget(mWidgetIds, mViews);
                 }
 
-                Log.i("BasicWidget", "The data upload has failed!");
                 return;
             }
 
@@ -126,7 +119,6 @@ public class BasicWidgetProvider extends AppWidgetProvider {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.i("BasicWidget", "Trying to download new data...");
             try {
                 data = new DataProvider().getLatest();
                 mSuccess = true;
